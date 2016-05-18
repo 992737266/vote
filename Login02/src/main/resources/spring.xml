@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+    
+    
+   	<bean id="userService" class="com.yc.login.service.impl.UserServiceImpl" p:userMapper-ref="userMapper"/>
+    
+    <bean id="userAction" class="com.yc.login.action.UserAction" p:userService-ref="userService"/>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource"
+		p:driverClassName="oracle.jdbc.driver.OracleDriver" 
+		p:url="jdbc:oracle:thin:@localhost:1521:orcl" 
+		p:username="scott" 
+		p:password="a"
+	/>
+	
+	<!--sqlSessionFactory 对象
+	p:dataSource-ref：数据源
+	p:typeAliasesPackage：mybatis实体类型指定别名的包
+	p:mapperLocations：mybatis实体类的映射文件
+	p:configLocation：mybatis的配置文件所在的位置
+	 -->
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
+	p:dataSource-ref="dataSource"
+	p:typeAliasesPackage="com.yc.login.entity"
+	p:mapperLocations="classpath:mapper/*Mapper.xml"
+	/>
+	
+	<!-- 配 制映射接口代理实现类的bean,bean id默认为映射接口名的首字母小写-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+	p:sqlSessionFactoryBeanName="sqlSessionFactory"
+	p:basePackage="com.yc.login.mapper"
+	/>
+	
+	
+</beans>
