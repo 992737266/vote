@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yc.favorite.mapper.FavoriteMapper">
+	 <select id="getAll" resultType="Favorite">
+	 	select * from Favorite order by f_id
+	 </select>
+	 <select id="getByType" parameterType="map" resultType="Favorite">
+	 	select * from Favorite where f_tags like '%${type}%'
+	 </select>
+	 <insert id="add" parameterType="favorite">
+	 	insert into Favorite values(FavoriteSeq.Nextval,#{f_label},#{f_url},#{f_tags},#{f_desc})
+	 </insert>
+</mapper>

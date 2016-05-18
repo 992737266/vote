@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yc.favorite.mapper.TagMapper">
+	 <select id="getAll" resultType="Tag">
+	 	select * from Tag where t_id in (select max(t_id) from Tag group by t_name)
+	 </select>
+	 <insert id="add" parameterType="Tag">
+	 	insert into Tag values(TagSeq.Nextval,#{t_name},#{t_count})
+	 </insert>
+</mapper>
