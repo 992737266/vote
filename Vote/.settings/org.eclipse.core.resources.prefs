@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//sql/vote.sql=GBK
+encoding//src/main/webapp/page/add.jsp=UTF-8
+encoding//src/main/webapp/page/list.jsp=UTF-8
+encoding//src/main/webapp/page/login.jsp=UTF-8
+encoding//src/main/webapp/page/manage.jsp=UTF-8
+encoding//src/main/webapp/page/reg_success.jsp=UTF-8
+encoding//src/main/webapp/page/register.jsp=UTF-8
+encoding//src/main/webapp/page/vote.jsp=UTF-8
+encoding//src/test/java/com/yc/vote/test/JavaMailSenderTest.java=UTF-8
+encoding/<project>=UTF-8

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 使用映射接口的方式， 命名空间的值必须与映射接口的全限定名一致 -->
+<mapper namespace="com.yc.vote.mapper.SubjectMapper">
+	<select id="getAllSubjects" resultType="Subject">
+		select * from VoteSubject
+	</select>
+	
+	
+	<select id="getAllSubjectBeans" resultType="SubjectBean">
+		select vsid,vstitle,(select count(1) from voteOption where vsid=vs.vsid) optionCount,(select count(1) from voteItem where vsid=vs.vsid) itemCount from voteSubject vs
+	</select>
+	
+	<!-- 定义sql语句变量 -->
+	<sql id="selectSubject">
+		select vsid,vstitle,vs_type,
+		(select count(1) from voteOption where vsid=vs.vsid) optionCount,
+		(select count(1) from voteItem where vsid=vs.vsid) voteUserCount
+		 from voteSubject vs where vsid=#{vsid}
+	</sql>
+	
+	
+	<select id="getOptionBeanbyIds"  parameterType="int" resultMap="OptionBeanMap">
+		<include refid="selectSubject"/> <!-- 调用sql语句变量 -->
+	</select>
+	
+	<resultMap type="OptionBean" id="OptionBeanMap">
+		<collection property="voteOptionCount"  column="vsid" javaType="list" select="getOptionVoteCountByVsid" />
+	</resultMap>
+	
+	<select id="getOptionVoteCountByVsid" parameterType="int" resultType="int">
+		select count(i.void) from VoteOption o left join VoteItem i on
+		 o.void=i.void where o.vsid=#{vsid} group by voorder order by voorder
+	</select>
+	
+	
+	
+	<resultMap type="VoteBean" id="VoteBeanMap">
+		<id property="vsId"  column="vsId"/>
+		<collection property="options"  column="vsId" ofType="Option" select="getOptionsByVsid" />
+	</resultMap>
+	<select id="getOptionsByVsid" parameterType="int" resultType="Option">
+		select * from VoteOption where vsid=#{vsid}
+	</select>
+	<select id="getVoteBeanbyIds"  parameterType="int" resultMap="VoteBeanMap">
+		<include refid="selectSubject"/> <!-- 调用sql语句变量 -->
+	</select>
+	<insert id="insertItem" parameterType="Item">
+		insert into VoteItem values(seq_item.nextval,#{voId},#{vsId},#{vuId})
+	</insert>
+	
+	
+	<insert id="insertSubject" parameterType="AddSubjectBean">
+		<selectKey keyColumn="currId" keyProperty="vsId" resultType="int" order="BEFORE">
+			select seq_Subject.nextval currId from dual
+		</selectKey>
+		insert into VoteSubject values(#{vsId},#{vstitle},#{vs_type})
+	</insert>
+	
+	<insert id="insertOption" parameterType="Option">
+		insert into VoteOption values(seq_Option.nextval, #{vooption}, #{vsId}, #{voorder})
+	</insert>
+	
+
+</mapper>
